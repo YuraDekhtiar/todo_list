@@ -15,7 +15,7 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = Routes.TodoList.route) {
         composable(Routes.TodoList.route) {
             TodoListScreen(
-                onClick = {
+                onClickNewTask = {
                     navController.navigate(Routes.NewTask.route)
                 }
 
