@@ -12,7 +12,7 @@ import com.example.todo_list.pages.todo_list.TodoListScreen
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Routes.TodoList.route) {
+    NavHost(navController = navController, startDestination = Routes.NewTask.route) {
         composable(Routes.TodoList.route) {
             TodoListScreen(
                 onClickNewTask = {
@@ -23,7 +23,7 @@ fun AppNavigation() {
         }
 
         composable(Routes.NewTask.route) {
-            NewTaskScreen(onClick = {
+            NewTaskScreen(onClickBack = {
                 navController.popBackStack()
             })
         }
