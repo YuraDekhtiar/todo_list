@@ -1,8 +1,10 @@
 package com.example.todo_list.pages.new_task
 
 import CalendarPickerDialog
-import android.app.TimePickerDialog
+import TimePickerDialog1
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,14 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +39,8 @@ import com.example.todo_list.ui.theme.Black50
 import com.example.todo_list.ui.theme.White
 import com.example.todo_list.ui.theme.Yellow100
 import com.example.todo_list.ui.theme.YellowFocused
-import java.util.Calendar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewTaskScreen(onClickBack: () -> Unit) {
     Scaffold(
@@ -69,7 +68,7 @@ private fun TopBar(onClickBack: () -> Unit, onClickSave: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
 
@@ -90,7 +89,9 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_access_time),
                 text = time.value,
                 contentDescription = stringResource(id = R.string.select_date_button),
-                onClick = {}
+                onClick = {
+                    isShowDialogSelectTime.value = true
+                }
 
             )
 
@@ -113,27 +114,27 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
             )
         }
 
-        val state = rememberTimePickerState()
+        if (isShowDialogSelectTime.value) {
+            TimePickerDialog1(
+                onClickOk = { selectedHour, selectedMinute ->
+                    time.value = "${selectedHour}:$selectedMinute"
+                    isShowDialogSelectTime.value = false
 
-
-        TimePickerDialog(
-            onCancel = { isShowDialogSelectTime.value = false },
-            onConfirm = {
-                val cal = Calendar.getInstance()
-                cal.set(Calendar.HOUR_OF_DAY, state.hour)
-                cal.set(Calendar.MINUTE, state.minute)
-                cal.isLenient = false
-
-                isShowDialogSelectTime.value = false
-            },
-        ) {
-            TimeInput(state = state)
+                },
+                onClickCancel = {
+                    isShowDialogSelectTime.value = false
+                }
+            )
         }
+
+
+
 
         TaskDescription()
 
     }
 }
+
 
 @Composable
 private fun TaskDescription() {
