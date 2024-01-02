@@ -3,7 +3,6 @@ package com.example.todo_list.pages.new_task
 import CalendarPickerDialog
 import TimePickerDialog1
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,7 +50,7 @@ fun NewTaskScreen(onClickBack: () -> Unit) {
             TopBar(
                 onClickBack = onClickBack
             ) {
-                Log.d("SaveButton", "Clicke Save Button")
+
             }
         }
     )
@@ -127,11 +126,7 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
             )
         }
 
-
-
-
         TaskDescription()
-
     }
 }
 
