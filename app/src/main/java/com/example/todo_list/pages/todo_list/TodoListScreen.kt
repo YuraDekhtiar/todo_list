@@ -1,6 +1,5 @@
 package com.example.todo_list.pages.todo_list
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
 import com.example.todo_list.pages.todo_list.widgets.SearchTextField
@@ -47,6 +45,9 @@ fun TodoListScreen(
     viewModel: TodoListViewModel,
     onClickNewTask: () -> Unit
 ) {
+    viewModel.handleUiEvent(
+        TodoListUiEvent.OnAddClick
+    )
     Scaffold(
         topBar = {
             SearchTextField { /* TODO */ }
