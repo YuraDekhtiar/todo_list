@@ -1,6 +1,11 @@
 package com.example.todo_list.pages.todo_list
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TodoListViewModel : ViewModel() {
+@HiltViewModel
+class TodoListViewModel @Inject constructor() : ViewModel() {
+
+
 }
