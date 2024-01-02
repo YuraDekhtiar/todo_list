@@ -1,5 +1,6 @@
 package com.example.todo_list.pages.todo_list
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +43,10 @@ import com.example.todo_list.ui.theme.White
 import com.example.todo_list.ui.theme.Yellow100
 
 @Composable
-fun TodoListScreen(onClickNewTask: () -> Unit) {
+fun TodoListScreen(
+    viewModel: TodoListViewModel,
+    onClickNewTask: () -> Unit
+) {
     Scaffold(
         topBar = {
             SearchTextField { /* TODO */ }
@@ -54,12 +58,6 @@ fun TodoListScreen(onClickNewTask: () -> Unit) {
             BottomBar(onClickNewTask = onClickNewTask)
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TodoListScreenPreview() {
-    TodoListScreen() { }
 }
 
 @Composable
