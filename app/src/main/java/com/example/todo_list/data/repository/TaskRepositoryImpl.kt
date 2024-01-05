@@ -16,6 +16,10 @@ class TaskRepositoryImpl
         return localDataSource.getTaskById(id)
     }
 
+    override suspend fun deleteTask(id: Int) {
+        localDataSource.deleteTask(id)
+    }
+
     override suspend fun createTask(task: Task) {
         localDataSource.saveTask(task)
     }

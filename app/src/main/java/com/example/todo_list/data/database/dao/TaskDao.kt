@@ -1,6 +1,7 @@
 package com.example.todo_list.data.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -25,4 +26,7 @@ interface TaskDao {
 
     @Update
     suspend fun updateTask(task: Task)
+
+    @Query("DELETE FROM tasks WHERE task_id = :id")
+    suspend fun deleteTask(id: Int)
 }

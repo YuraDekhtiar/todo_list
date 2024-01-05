@@ -19,6 +19,10 @@ class LocalDataSourceImpl @Inject constructor(private val database: AppDatabase)
         return database.taskDao().saveTask(task)
     }
 
+    override suspend fun deleteTask(id: Int) {
+        database.taskDao().deleteTask(id)
+    }
+
     override suspend fun updateTask(task: Task) {
         return database.taskDao().updateTask(task)
     }
