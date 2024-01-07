@@ -1,4 +1,4 @@
-package com.example.todo_list.database.entities
+package com.example.todo_list.data.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
     tableName = "tasks",
 )
 data class Task(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
     val taskId: Int,
     val description: String,
