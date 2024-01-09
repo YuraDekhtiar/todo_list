@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.todo_list
+package com.example.todo_list.view.pages.todo_list
 
 import com.example.todo_list.base.UiEvent
 

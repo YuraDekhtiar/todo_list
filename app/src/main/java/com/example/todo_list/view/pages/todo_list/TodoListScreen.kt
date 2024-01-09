@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.todo_list
+package com.example.todo_list.view.pages.todo_list
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,12 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.database.entities.Task
-import com.example.todo_list.pages.todo_list.widgets.SearchTextField
-import com.example.todo_list.ui.theme.Black44
-import com.example.todo_list.ui.theme.Gray100
-import com.example.todo_list.ui.theme.White
-import com.example.todo_list.ui.theme.Yellow100
+import com.example.todo_list.data.database.entities.Task
+import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
+import com.example.todo_list.view.theme.Black44
+import com.example.todo_list.view.theme.Gray100
+import com.example.todo_list.view.theme.White
+import com.example.todo_list.view.theme.Yellow100
 
 @Composable
 fun TodoListScreen(

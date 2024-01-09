@@ -8,7 +8,9 @@ import javax.inject.Inject
 class LocalDataSourceImpl @Inject constructor(private val database: AppDatabase) : LocalDataSource {
 
     override suspend fun getAllTasks(): List<Task>? {
-        return database.taskDao().getAllTasks()
+        return database.taskDao().getAllTasks().map {
+            it.toDomain()
+        }
     }
 
     override suspend fun getTaskById(id: Int): Task? {

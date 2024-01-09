@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.new_task
+package com.example.todo_list.view.pages.new_task
 
 import CalendarPickerDialog
 import TimePickerDialog1
@@ -30,14 +30,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.pages.widgets.BackButton
-import com.example.todo_list.pages.widgets.IconTextButton
-import com.example.todo_list.pages.widgets.SaveButton
-import com.example.todo_list.ui.theme.Black40
-import com.example.todo_list.ui.theme.Black50
-import com.example.todo_list.ui.theme.White
-import com.example.todo_list.ui.theme.Yellow100
-import com.example.todo_list.ui.theme.YellowFocused
+import com.example.todo_list.view.pages.widgets.BackButton
+import com.example.todo_list.view.pages.widgets.IconTextButton
+import com.example.todo_list.view.pages.widgets.SaveButton
+import com.example.todo_list.view.theme.Black40
+import com.example.todo_list.view.theme.Black50
+import com.example.todo_list.view.theme.White
+import com.example.todo_list.view.theme.Yellow100
+import com.example.todo_list.view.theme.YellowFocused
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

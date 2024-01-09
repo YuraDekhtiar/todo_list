@@ -10,10 +10,10 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
-    val taskId: Int,
-    val description: String,
-    val time: Long,
+    val taskId: Int? = null,
+    val description: String? = null,
+    val time: Long? = null,
     @ColumnInfo(name = "is_done")
-    val isDone: Boolean
+    val isDone: Boolean? = null
 )
 
