@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -52,6 +54,7 @@ android {
     }
     kapt {
         correctErrorTypes = true
+        useBuildCache = true
     }
 }
 
@@ -74,8 +77,9 @@ dependencies {
 
     // Room Database
     implementation(libs.androidx.room)
+    implementation(libs.room.ktx)
     annotationProcessor(libs.androidx.compiler)
-    kapt(libs.androidx.room)
+    ksp(libs.androidx.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
