@@ -10,5 +10,6 @@ sealed class TodoListUiEvent : UiEvent {
     data object OnAddClick : TodoListUiEvent()
     data class OnSearchUpdate(val text: String) : TodoListUiEvent()
     data object OnSearchClear : TodoListUiEvent()
+    data object OnLoadingUiData : TodoListUiEvent()
 }
 

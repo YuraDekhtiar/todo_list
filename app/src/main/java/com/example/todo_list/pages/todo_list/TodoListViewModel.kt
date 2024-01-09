@@ -21,6 +21,9 @@ class TodoListViewModel @Inject constructor() : BaseViewModel<TodoListUiState>()
             is TodoListUiEvent.OnAddClick -> { }
             is TodoListUiEvent.OnSearchUpdate -> { }
             is TodoListUiEvent.OnSearchClear -> { }
+            is TodoListUiEvent.OnLoadingUiData -> {
+
+            }
         }
     }
 }
