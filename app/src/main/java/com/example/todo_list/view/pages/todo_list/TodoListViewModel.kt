@@ -1,14 +1,10 @@
 package com.example.todo_list.view.pages.todo_list
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.todo_list.base.BaseViewModel
 import com.example.todo_list.base.UiEvent
-import com.example.todo_list.data.database.entities.Task
 import com.example.todo_list.domain.repository.TaskRepository
-import com.example.todo_list.view.model.TaskUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.domain.model.TaskDomain
 import com.example.todo_list.view.model.TaskUi
 import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
 import com.example.todo_list.view.theme.Black44

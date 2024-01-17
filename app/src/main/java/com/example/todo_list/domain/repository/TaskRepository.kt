@@ -1,7 +1,6 @@
 package com.example.todo_list.domain.repository
 
 import com.example.todo_list.data.database.entities.Task
-import com.example.todo_list.domain.model.TaskDomain
 import com.example.todo_list.view.model.TaskUi
 
 interface TaskRepository {
