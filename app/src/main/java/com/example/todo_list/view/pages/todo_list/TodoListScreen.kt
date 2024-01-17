@@ -36,7 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.data.database.entities.Task
+import com.example.todo_list.domain.model.TaskDomain
+import com.example.todo_list.view.model.TaskUi
 import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
 import com.example.todo_list.view.theme.Black44
 import com.example.todo_list.view.theme.Gray100
@@ -55,16 +56,24 @@ fun TodoListScreen(
     }
 
     val uiState by viewModel.uiState
+    val uiEvent = viewModel::handleUiEvent
 
     Scaffold(
         topBar = {
-            SearchTextField { /* TODO */ }
+            SearchTextField(
+                onClearClick = {
+                    uiEvent(TodoListUiEvent.OnSearchClear)
+                },
+                searchAction = {
+                    uiEvent(TodoListUiEvent.OnSearchUpdate(it))
+                }
+            )
         },
         content = { innerPadding ->
             TodoListScreenContent(
                 modifier = Modifier.padding(innerPadding),
                 uiState = uiState,
-                uiEvent = viewModel::handleUiEvent
+                uiEvent = uiEvent
             )
         },
         bottomBar = {
@@ -117,17 +126,16 @@ private fun TodoListScreenContent(
                     )
                 }
             }
-
         }
     }
 }
 
 @Composable
 private fun TodoListItem(
-    task: Task,
+    task: TaskUi,
     uiEvent: (TodoListUiEvent) -> Unit,
 ) {
-    val checkedState = remember { mutableStateOf(false) }
+    val checkedState = remember { mutableStateOf(task.isDone) }
 
     Row(
         modifier = Modifier
@@ -140,6 +148,7 @@ private fun TodoListItem(
             )
             .clickable {
                 checkedState.value = !checkedState.value
+                uiEvent(TodoListUiEvent.OnCheckClick(task.taskId, checkedState.value))
             }
     ) {
         Column(
@@ -170,7 +179,7 @@ private fun TodoListItem(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = task.time.toString(),
+                    text = task.time,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -187,8 +196,9 @@ private fun TodoListItem(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.End
             ) {
+                // Change button
                 IconButton(onClick = {
-                    uiEvent(TodoListUiEvent.OnEditClick(task.taskId))
+
                 }) {
                     Icon(
                         Icons.Rounded.Create,
@@ -196,7 +206,7 @@ private fun TodoListItem(
                         tint = Yellow100
                     )
                 }
-
+                // Delete button
                 IconButton(onClick = {
                     uiEvent(TodoListUiEvent.OnDeleteClick(task.taskId))
                 }) {

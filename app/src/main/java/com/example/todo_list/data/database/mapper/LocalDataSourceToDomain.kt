@@ -5,9 +5,9 @@ import com.example.todo_list.domain.model.TaskDomain
 
 fun Task.toDomain(): TaskDomain {
     return TaskDomain(
-        taskId = this.taskId :? -1,
+        taskId = this.taskId ?: -1,
         description = this.description.orEmpty(),
-        time = this.time,
-        isDone = this.isDone
+        time = this.time ?: -1,
+        isDone = this.isDone ?: false
     )
 }

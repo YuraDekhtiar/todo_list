@@ -31,6 +31,7 @@ import com.example.todo_list.view.theme.YellowFocused
 fun SearchTextField(
     modifier: Modifier = Modifier,
     searchAction: (searchText: String) -> Unit,
+    onClearClick: () -> Unit
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
@@ -73,11 +74,15 @@ fun SearchTextField(
                 contentDescription = null,
             )
         },
+        // Clear button
         trailingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Close,
                 contentDescription = null,
-                Modifier.clickable { searchText = "" }
+                Modifier.clickable {
+                    searchText = ""
+                    onClearClick()
+                }
             )
         }
 
