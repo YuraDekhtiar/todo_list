@@ -1,6 +1,5 @@
 package com.example.todo_list.view.pages.new_task
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.todo_list.base.BaseViewModel
 import com.example.todo_list.base.UiEvent
