@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.new_task
+package com.example.todo_list.view.pages.new_task
 
 import androidx.lifecycle.ViewModel
 

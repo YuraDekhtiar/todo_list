@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.todo_list.widgets
+package com.example.todo_list.view.pages.todo_list.widgets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,16 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.ui.theme.Black40
-import com.example.todo_list.ui.theme.Black50
-import com.example.todo_list.ui.theme.White
-import com.example.todo_list.ui.theme.Yellow100
-import com.example.todo_list.ui.theme.YellowFocused
+import com.example.todo_list.view.theme.Black40
+import com.example.todo_list.view.theme.Black50
+import com.example.todo_list.view.theme.White
+import com.example.todo_list.view.theme.Yellow100
+import com.example.todo_list.view.theme.YellowFocused
 
 @Composable
 fun SearchTextField(
     modifier: Modifier = Modifier,
     searchAction: (searchText: String) -> Unit,
+    onClearClick: () -> Unit
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
@@ -73,11 +74,15 @@ fun SearchTextField(
                 contentDescription = null,
             )
         },
+        // Clear button
         trailingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Close,
                 contentDescription = null,
-                Modifier.clickable { searchText = "" }
+                Modifier.clickable {
+                    searchText = ""
+                    onClearClick()
+                }
             )
         }
 

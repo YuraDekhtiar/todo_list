@@ -13,7 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.navigation.AppNavigation
-import com.example.todo_list.ui.theme.Todo_listTheme
+import com.example.todo_list.view.theme.Todo_listTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

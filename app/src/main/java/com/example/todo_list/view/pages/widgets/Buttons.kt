@@ -1,4 +1,4 @@
-package com.example.todo_list.pages.widgets
+package com.example.todo_list.view.pages.widgets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.ui.theme.Yellow100
+import com.example.todo_list.view.theme.Yellow100
 
 @Composable
 fun BackButton(onClick: () -> Unit) {

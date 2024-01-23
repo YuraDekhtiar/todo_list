@@ -1,6 +1,5 @@
-package com.example.todo_list.pages.todo_list
+package com.example.todo_list.view.pages.todo_list
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,32 +26,54 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.pages.todo_list.widgets.SearchTextField
-import com.example.todo_list.ui.theme.Black44
-import com.example.todo_list.ui.theme.Gray100
-import com.example.todo_list.ui.theme.White
-import com.example.todo_list.ui.theme.Yellow100
+import com.example.todo_list.view.model.TaskUi
+import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
+import com.example.todo_list.view.theme.Black44
+import com.example.todo_list.view.theme.Gray100
+import com.example.todo_list.view.theme.White
+import com.example.todo_list.view.theme.Yellow100
 
 @Composable
 fun TodoListScreen(
     viewModel: TodoListViewModel,
     onClickNewTask: () -> Unit
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.handleUiEvent(
+            TodoListUiEvent.OnLoadingUiData
+        )
+    }
+
+    val uiState by viewModel.uiState
+    val uiEvent = viewModel::handleUiEvent
+
     Scaffold(
         topBar = {
-            SearchTextField { /* TODO */ }
+            SearchTextField(
+                onClearClick = {
+                    uiEvent(TodoListUiEvent.OnSearchClear)
+                },
+                searchAction = {
+                    uiEvent(TodoListUiEvent.OnSearchUpdate(it))
+                }
+            )
         },
         content = { innerPadding ->
-            TodoListScreenContent(modifier = Modifier.padding(innerPadding))
+            TodoListScreenContent(
+                modifier = Modifier.padding(innerPadding),
+                uiState = uiState,
+                uiEvent = uiEvent
+            )
         },
         bottomBar = {
             BottomBar(onClickNewTask = onClickNewTask)
@@ -80,7 +101,11 @@ private fun BottomBar(onClickNewTask: () -> Unit) {
 
 
 @Composable
-private fun TodoListScreenContent(modifier: Modifier = Modifier) {
+private fun TodoListScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: TodoListUiState?,
+    uiEvent: (TodoListUiEvent) -> Unit
+) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier
@@ -92,8 +117,13 @@ private fun TodoListScreenContent(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(15) { index ->
-                TodoListItem("08:0${index}", "Text description: ${index}", {}, {})
+            uiState?.let {
+                items(it.tasks.size) { index ->
+                    TodoListItem(
+                        task = it.tasks[index],
+                        uiEvent = uiEvent
+                    )
+                }
             }
         }
     }
@@ -101,12 +131,10 @@ private fun TodoListScreenContent(modifier: Modifier = Modifier) {
 
 @Composable
 private fun TodoListItem(
-    time: String,
-    description: String,
-    onClickDelete: () -> Unit,
-    onClickEdit: () -> Unit,
+    task: TaskUi,
+    uiEvent: (TodoListUiEvent) -> Unit,
 ) {
-    val checkedState = remember { mutableStateOf(false) }
+    val checkedState = remember { mutableStateOf(task.isDone) }
 
     Row(
         modifier = Modifier
@@ -119,6 +147,7 @@ private fun TodoListItem(
             )
             .clickable {
                 checkedState.value = !checkedState.value
+                uiEvent(TodoListUiEvent.OnCheckClick(task.taskId, checkedState.value))
             }
     ) {
         Column(
@@ -149,12 +178,12 @@ private fun TodoListItem(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = time,
+                    text = task.time,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
-                    text = description,
+                    text = task.description,
                     style = MaterialTheme.typography.bodyLarge,
                     textDecoration = if (checkedState.value) TextDecoration.LineThrough
                     else TextDecoration.None
@@ -166,15 +195,20 @@ private fun TodoListItem(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.End
             ) {
-                IconButton(onClick = { onClickEdit() }) {
+                // Change button
+                IconButton(onClick = {
+
+                }) {
                     Icon(
                         Icons.Rounded.Create,
                         null,
                         tint = Yellow100
                     )
                 }
-
-                IconButton(onClick = { onClickDelete() }) {
+                // Delete button
+                IconButton(onClick = {
+                    uiEvent(TodoListUiEvent.OnDeleteClick(task.taskId))
+                }) {
                     Icon(
                         Icons.Rounded.Delete,
                         null,

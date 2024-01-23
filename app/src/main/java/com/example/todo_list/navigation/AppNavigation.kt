@@ -8,9 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.todo_list.pages.new_task.NewTaskScreen
-import com.example.todo_list.pages.todo_list.TodoListScreen
-import com.example.todo_list.pages.todo_list.TodoListViewModel
+import com.example.todo_list.view.pages.new_task.NewTaskScreen
+import com.example.todo_list.view.pages.todo_list.TodoListScreen
+import com.example.todo_list.view.pages.todo_list.TodoListViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)

@@ -1,7 +1,6 @@
 package com.example.todo_list.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,7 +15,7 @@ interface TaskDao {
     suspend fun getAllTasks() : List<Task>
 
     @Query("SELECT * FROM tasks WHERE description LIKE (:search)")
-    suspend fun searchTask(search: String) : List<Task>?
+    suspend fun searchTask(search: String) : List<Task>
 
     @Query("SELECT * FROM tasks WHERE task_id IN (:id)")
     suspend fun getTaskById(id: Int) : Task?
@@ -29,4 +28,7 @@ interface TaskDao {
 
     @Query("DELETE FROM tasks WHERE task_id = :id")
     suspend fun deleteTask(id: Int)
+
+    @Query("UPDATE tasks SET is_done = :isDone WHERE task_id = :id")
+    suspend fun changeTaskStatus(id: Int, isDone: Boolean)
 }
