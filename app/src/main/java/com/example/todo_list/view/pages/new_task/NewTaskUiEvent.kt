@@ -1,11 +1,10 @@
 package com.example.todo_list.view.pages.new_task
 
 import com.example.todo_list.base.UiEvent
-import com.example.todo_list.view.model.TaskUi
-import com.example.todo_list.view.pages.todo_list.TodoListUiEvent
+import com.example.todo_list.view.model.NewTask
 
 sealed class NewTaskUiEvent: UiEvent {
-    data class OnSaveClick(val task: TaskUi) : NewTaskUiEvent()
+    data class OnSaveClick(val newTask: NewTask) : NewTaskUiEvent()
     data object OnBackClick : NewTaskUiEvent()
     data object OnLoadingUiData : NewTaskUiEvent()
 }
