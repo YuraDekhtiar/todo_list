@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
+import com.example.todo_list.view.model.TaskUi
+import com.example.todo_list.view.pages.todo_list.TodoListUiEvent
+import com.example.todo_list.view.pages.todo_list.TodoListUiState
+import com.example.todo_list.view.pages.todo_list.TodoListViewModel
 import com.example.todo_list.view.pages.widgets.BackButton
 import com.example.todo_list.view.pages.widgets.IconTextButton
 import com.example.todo_list.view.pages.widgets.SaveButton
@@ -41,16 +46,38 @@ import com.example.todo_list.view.theme.YellowFocused
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewTaskScreen(onClickBack: () -> Unit) {
+fun NewTaskScreen(
+    viewModel: NewTaskViewModel,
+    onClickBack: () -> Unit
+) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.handleUiEvent(
+            NewTaskUiEvent.OnLoadingUiData
+        )
+    }
+
+    val uiState by viewModel.uiState
+    val uiEvent = viewModel::handleUiEvent
+
+    val task: TaskUi? = null
+
+
     Scaffold(
         content = {
-            NewTaskScreenContent(modifier = Modifier.padding(it))
+            NewTaskScreenContent(
+                uiState = uiState,
+                uiEvent = uiEvent,
+                task = task,
+                modifier = Modifier.padding(it)
+            )
         },
         topBar = {
             TopBar(
                 onClickBack = onClickBack
             ) {
-
+                task?.let {
+                    uiEvent(NewTaskUiEvent.OnSaveClick(it))
+                }
             }
         }
     )
@@ -69,8 +96,12 @@ private fun TopBar(onClickBack: () -> Unit, onClickSave: () -> Unit) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
-
+private fun NewTaskScreenContent(
+    uiState: NewTaskUiState?,
+    uiEvent: (NewTaskUiEvent) -> Unit,
+    task: TaskUi?,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
         val time = rememberSaveable { mutableStateOf("21:00") }
         val date = rememberSaveable { mutableStateOf("29/12/2023") }
