@@ -38,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
 import com.example.todo_list.view.model.TaskUi
 import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
+import com.example.todo_list.view.pages.widgets.DeleteConfirmDialog
+import com.example.todo_list.view.pages.widgets.DeleteIconButton
+import com.example.todo_list.view.pages.widgets.EditIconButton
 import com.example.todo_list.view.theme.Black44
 import com.example.todo_list.view.theme.Gray100
 import com.example.todo_list.view.theme.White
@@ -135,6 +138,7 @@ private fun TodoListItem(
     uiEvent: (TodoListUiEvent) -> Unit,
 ) {
     val checkedState = remember { mutableStateOf(task.isDone) }
+    val isShowDeleteConfirmDialog = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -195,24 +199,21 @@ private fun TodoListItem(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.End
             ) {
-                // Change button
-                IconButton(onClick = {
-
-                }) {
-                    Icon(
-                        Icons.Rounded.Create,
-                        null,
-                        tint = Yellow100
-                    )
+                EditIconButton {
+                    // TODO
                 }
-                // Delete button
-                IconButton(onClick = {
-                    uiEvent(TodoListUiEvent.OnDeleteClick(task.taskId))
-                }) {
-                    Icon(
-                        Icons.Rounded.Delete,
-                        null,
-                        tint = Yellow100
+                DeleteIconButton {
+                    isShowDeleteConfirmDialog.value = true
+                }
+
+                if (isShowDeleteConfirmDialog.value) {
+                    DeleteConfirmDialog(
+                        onDismissRequest = { isShowDeleteConfirmDialog.value = false },
+                        onConfirmation = {
+                            uiEvent(TodoListUiEvent.OnDeleteClick(task.taskId))
+                            isShowDeleteConfirmDialog.value = false
+                        },
+                        dialogTitle = task.description,
                     )
                 }
             }
