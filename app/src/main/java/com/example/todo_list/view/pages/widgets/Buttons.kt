@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -18,6 +21,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
 import com.example.todo_list.view.theme.Yellow100
+
+@Composable
+private fun BaseButton(
+    imageVector: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+) {
+    IconButton(onClick = { onClick() }) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            tint = Yellow100
+        )
+    }
+}
 
 @Composable
 fun BackButton(onClick: () -> Unit) {
@@ -38,18 +56,21 @@ fun SaveButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun BaseButton(
-    imageVector: ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit,
-) {
-    IconButton(onClick = { onClick() }) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            tint = Yellow100
-        )
-    }
+fun DeleteIconButton(onClick: () -> Unit) {
+    BaseButton(
+        imageVector = Icons.Filled.Delete,
+        contentDescription = stringResource(id = R.string.delete_icon_button),
+        onClick = onClick
+    )
+}
+
+@Composable
+fun EditIconButton(onClick: () -> Unit) {
+    BaseButton(
+        imageVector = Icons.Filled.Edit,
+        contentDescription = stringResource(id = R.string.edit_icon_button),
+        onClick = onClick
+    )
 }
 
 @Composable
