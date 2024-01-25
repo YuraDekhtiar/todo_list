@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
+import com.example.todo_list.view.model.NewTask
 import com.example.todo_list.view.pages.widgets.BackButton
 import com.example.todo_list.view.pages.widgets.IconTextButton
 import com.example.todo_list.view.pages.widgets.SaveButton
@@ -41,19 +43,48 @@ import com.example.todo_list.view.theme.YellowFocused
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewTaskScreen(onClickBack: () -> Unit) {
-    Scaffold(
-        content = {
-            NewTaskScreenContent(modifier = Modifier.padding(it))
-        },
-        topBar = {
-            TopBar(
-                onClickBack = onClickBack
-            ) {
+fun NewTaskScreen(
+    viewModel: NewTaskViewModel,
+    onClickBack: () -> Unit
+) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.handleUiEvent(
+            NewTaskUiEvent.OnLoadingUiData
+        )
+    }
 
+    val uiState by viewModel.uiState
+    val uiEvent = viewModel::handleUiEvent
+
+
+    uiState?.let { state ->
+        val newTask = NewTask(
+            description = state.newTask.description,
+            time = state.newTask.time,
+            date = state.newTask.date
+        )
+
+        Scaffold(
+            content = {
+                NewTaskScreenContent(
+                    uiState = state,
+                    modifier = Modifier.padding(it),
+                    onChangeDate = { date -> newTask.date = date },
+                    onChangeDescription = { desc -> newTask.description = desc },
+                    onChangeTime = { time -> newTask.time = time }
+                )
+            },
+            topBar = {
+                TopBar(
+                    onClickBack = onClickBack
+                ) {
+                    uiEvent(NewTaskUiEvent.OnSaveClick(newTask))
+                }
             }
-        }
-    )
+        )
+    }
+
+
 }
 
 @Composable
@@ -69,11 +100,16 @@ private fun TopBar(onClickBack: () -> Unit, onClickSave: () -> Unit) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
-
+private fun NewTaskScreenContent(
+    uiState: NewTaskUiState,
+    modifier: Modifier = Modifier,
+    onChangeTime: (time: String) -> Unit,
+    onChangeDate: (date: String) -> Unit,
+    onChangeDescription: (description: String) -> Unit
+) {
     Column(modifier = modifier) {
-        val time = rememberSaveable { mutableStateOf("21:00") }
-        val date = rememberSaveable { mutableStateOf("29/12/2023") }
+        val time = rememberSaveable { mutableStateOf(uiState.newTask.time) }
+        val date = rememberSaveable { mutableStateOf(uiState.newTask.date) }
 
         val isShowDialogSelectTime = remember { mutableStateOf(false) }
         val isShowDialogSelectDate = remember { mutableStateOf(false) }
@@ -106,6 +142,7 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
                 onClickOk = {
                     isShowDialogSelectDate.value = false
                     date.value = it
+                    onChangeDate(date.value)
                 },
                 onClickCancel = {
                     isShowDialogSelectDate.value = false
@@ -118,7 +155,7 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
                 onClickOk = { selectedHour, selectedMinute ->
                     time.value = "${selectedHour}:$selectedMinute"
                     isShowDialogSelectTime.value = false
-
+                    onChangeTime(time.value)
                 },
                 onClickCancel = {
                     isShowDialogSelectTime.value = false
@@ -126,14 +163,20 @@ private fun NewTaskScreenContent(modifier: Modifier = Modifier) {
             )
         }
 
-        TaskDescription()
+        TaskDescription(
+            uiState.newTask.description,
+            onTaskDescriptionChange = { onChangeDescription(it) }
+        )
     }
 }
 
 
 @Composable
-private fun TaskDescription() {
-    var text by rememberSaveable { mutableStateOf("") }
+private fun TaskDescription(
+    taskDescription: String,
+    onTaskDescriptionChange: (taskDescription: String) -> Unit
+) {
+    var text by rememberSaveable { mutableStateOf(taskDescription) }
 
     OutlinedTextField(
         modifier = Modifier
@@ -141,7 +184,10 @@ private fun TaskDescription() {
             .fillMaxHeight(),
         shape = RoundedCornerShape(16.dp),
         value = text,
-        onValueChange = { text = it },
+        onValueChange = {
+            text = it
+            onTaskDescriptionChange(it)
+        },
         placeholder = {
             Text(
                 text = stringResource(id = R.string.task_description),
