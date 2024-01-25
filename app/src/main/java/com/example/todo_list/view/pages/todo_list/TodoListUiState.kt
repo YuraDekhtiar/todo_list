@@ -5,5 +5,5 @@ import com.example.todo_list.view.model.TaskUi
 
 data class TodoListUiState(
     val tasks: List<TaskUi> = emptyList(),
-    val search: String = ""
+    val search: String = "",
 ) : UiState

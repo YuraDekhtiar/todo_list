@@ -38,7 +38,8 @@ fun AppNavigation() {
                 viewModel = viewModel,
                 onClickBack = {
                     navController.popBackStack()
-                })
+                }
+            )
         }
     }
 

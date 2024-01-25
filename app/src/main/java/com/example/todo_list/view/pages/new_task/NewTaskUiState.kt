@@ -4,5 +4,6 @@ import com.example.todo_list.base.UiState
 import com.example.todo_list.view.model.NewTask
 
 data class NewTaskUiState(
-    val newTask: NewTask
+    // TODO get this data from repository
+    val newTask: NewTask = NewTask.emptyTask()
 ) : UiState

@@ -9,8 +9,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoListViewModel @Inject constructor(private val taskRepository: TaskRepository) :
-    BaseViewModel<TodoListUiState>() {
+class TodoListViewModel @Inject constructor(
+    private val taskRepository: TaskRepository
+) : BaseViewModel<TodoListUiState>() {
 
     override fun handleUiEvent(uiEvent: UiEvent) {
         when (uiEvent) {
@@ -51,6 +52,7 @@ class TodoListViewModel @Inject constructor(private val taskRepository: TaskRepo
                 }
 
             }
+
             is TodoListUiEvent.OnSearchClear -> {
                 viewModelScope.launch {
                     val tasks = taskRepository.getAllTasks()
@@ -58,7 +60,8 @@ class TodoListViewModel @Inject constructor(private val taskRepository: TaskRepo
                     updateState {
                         it.value = TodoListUiState(tasks)
                     }
-                }            }
+                }
+            }
 
             is TodoListUiEvent.OnLoadingUiData -> {
                 viewModelScope.launch {

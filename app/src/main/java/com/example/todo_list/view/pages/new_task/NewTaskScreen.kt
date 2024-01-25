@@ -3,6 +3,7 @@ package com.example.todo_list.view.pages.new_task
 import CalendarPickerDialog
 import TimePickerDialog1
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
-import com.example.todo_list.view.model.NewTask
 import com.example.todo_list.view.pages.widgets.BackButton
 import com.example.todo_list.view.pages.widgets.IconTextButton
 import com.example.todo_list.view.pages.widgets.SaveButton
@@ -47,54 +47,54 @@ fun NewTaskScreen(
     viewModel: NewTaskViewModel,
     onClickBack: () -> Unit
 ) {
+    BackHandler {
+        viewModel.handleUiEvent(
+            NewTaskUiEvent.OnBackClick
+        )
+    }
+
     LaunchedEffect(key1 = Unit) {
         viewModel.handleUiEvent(
             NewTaskUiEvent.OnLoadingUiData
         )
     }
 
+//    onBackClickEvent.obsereve {
+//        onClickBack()
+//    }
+
     val uiState by viewModel.uiState
     val uiEvent = viewModel::handleUiEvent
 
-
     uiState?.let { state ->
-        val newTask = NewTask(
-            description = state.newTask.description,
-            time = state.newTask.time,
-            date = state.newTask.date
-        )
 
         Scaffold(
             content = {
                 NewTaskScreenContent(
                     uiState = state,
                     modifier = Modifier.padding(it),
-                    onChangeDate = { date -> newTask.date = date },
-                    onChangeDescription = { desc -> newTask.description = desc },
-                    onChangeTime = { time -> newTask.time = time }
+                    onChangeDate = { date -> state.newTask.date = date },
+                    onChangeDescription = { desc -> state.newTask.description = desc },
+                    onChangeTime = { time -> state.newTask.time = time }
                 )
             },
             topBar = {
-                TopBar(
-                    onClickBack = onClickBack
-                ) {
-                    uiEvent(NewTaskUiEvent.OnSaveClick(newTask))
-                }
+                TopBar(uiEvent = uiEvent)
             }
         )
     }
-
-
 }
 
 @Composable
-private fun TopBar(onClickBack: () -> Unit, onClickSave: () -> Unit) {
+private fun TopBar(
+    uiEvent: (NewTaskUiEvent) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        BackButton(onClick = onClickBack)
-        SaveButton(onClick = onClickSave)
+        BackButton(onClick = { uiEvent(NewTaskUiEvent.OnBackClick) })
+        SaveButton(onClick = { uiEvent(NewTaskUiEvent.OnSaveClick) })
     }
 }
 
