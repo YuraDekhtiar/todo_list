@@ -1,9 +1,10 @@
 package com.example.todo_list.view.pages.new_task
 
 import com.example.todo_list.base.UiState
-import com.example.todo_list.view.model.NewTask
+import com.example.todo_list.data.datasource.TaskDataSourceImpl
+import com.example.todo_list.view.mapper.toTaskUi
+import com.example.todo_list.view.model.TaskUi
 
 data class NewTaskUiState(
-    // TODO get this data from repository
-    val newTask: NewTask = NewTask.emptyTask()
+    val task: TaskUi = TaskDataSourceImpl().getEmptyTask().toTaskUi()
 ) : UiState
