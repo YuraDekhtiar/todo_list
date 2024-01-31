@@ -1,9 +1,9 @@
-package com.example.todo_list.view
+package com.example.todo_list.base.utils
 
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-object TimeFormat {
+object TimeDateFormat {
     private const val TIME_FORMAT = "HH:mm"
     private const val DATE_FORMAT = "dd/MM/yyyy"
     private val LOCALE = Locale.ENGLISH

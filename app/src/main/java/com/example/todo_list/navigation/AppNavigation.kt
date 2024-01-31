@@ -26,22 +26,25 @@ fun AppNavigation() {
             TodoListScreen(
                 viewModel = viewModel,
                 onClickNewTask = {
-                    navController.navigate(Routes.NewTask.route)
+                    navController.navigate("${Routes.NewTask.route}/${-1}")
+                },
+                onClickEditTask = {
+                    navController.navigate("${Routes.NewTask.route}/${it}")
                 }
             )
         }
 
-        composable(Routes.NewTask.route) {
+        composable("${Routes.NewTask.route}/{${Routes.TaskId.route}}") {
             val viewModel = hiltViewModel<NewTaskViewModel>()
-
-            NewTaskScreen(
-                viewModel = viewModel,
-                onClickBack = {
+            it.arguments?.getString(Routes.TaskId.route)?.let { id ->
+                NewTaskScreen(
+                    viewModel = viewModel,
+                    taskId = id.toInt()
+                ) {
                     navController.popBackStack()
                 }
-            )
+            }
         }
     }
-
 }
 

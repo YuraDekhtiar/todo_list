@@ -3,6 +3,7 @@ package com.example.todo_list.view.pages.new_task
 import CalendarPickerDialog
 import TimePickerDialog1
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,17 +45,20 @@ import com.example.todo_list.view.theme.YellowFocused
 @Composable
 fun NewTaskScreen(
     viewModel: NewTaskViewModel,
+    taskId: Int,
     onClickBack: () -> Unit
 ) {
-//    BackHandler {
-//        viewModel.handleUiEvent(
-//            NewTaskUiEvent.OnBackClick
-//        )
-//    }
+    BackHandler {
+        // Fix back event
+        onClickBack()
+        viewModel.handleUiEvent(
+            NewTaskUiEvent.OnBackClick
+        )
+    }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.handleUiEvent(
-            NewTaskUiEvent.OnLoadingUiData()
+            NewTaskUiEvent.OnLoadingUiData(taskId)
         )
     }
 
