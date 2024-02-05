@@ -50,7 +50,6 @@ class TodoListViewModel @Inject constructor(
                         it.value = it.value?.copy(tasks = tasks)
                     }
                 }
-
             }
 
             is TodoListUiEvent.OnSearchClear -> {
@@ -63,14 +62,16 @@ class TodoListViewModel @Inject constructor(
                 }
             }
 
-            is TodoListUiEvent.OnLoadingUiData -> {
-                viewModelScope.launch {
-                    val tasks = taskRepository.getAllTasks()
+            is TodoListUiEvent.OnLoadingUiData -> { loadData() }
+        }
+    }
 
-                    updateState {
-                        it.value = TodoListUiState(tasks)
-                    }
-                }
+    private fun loadData() {
+        viewModelScope.launch {
+            val tasks = taskRepository.getAllTasks()
+
+            updateState {
+                it.value = TodoListUiState(tasks)
             }
         }
     }

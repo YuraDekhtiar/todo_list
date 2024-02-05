@@ -13,6 +13,8 @@ nav-version = "2.7.6"
 hilt = "2.48.1"
 room = "2.6.1"
 ksp = "1.9.21-1.0.15"
+mockk = "1.13.9"
+coroutines-version = "1.7.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -36,6 +38,10 @@ androidx-compiler = { group = "androidx.room", name="room-compiler", version.ref
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 hilt-android-core = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotlinx = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-version" }
+
+
 
 
 [plugins]

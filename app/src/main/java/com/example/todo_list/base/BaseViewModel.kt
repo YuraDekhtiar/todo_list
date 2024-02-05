@@ -16,3 +16,4 @@ abstract class BaseViewModel<S: UiState> : ViewModel() {
     }
 
 }
+

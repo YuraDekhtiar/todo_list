@@ -3,6 +3,7 @@ package com.example.todo_list.view.pages.new_task
 import CalendarPickerDialog
 import TimePickerDialog1
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -28,9 +29,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.todo_list.R
 import com.example.todo_list.view.pages.widgets.BackButton
 import com.example.todo_list.view.pages.widgets.IconTextButton
@@ -41,6 +46,28 @@ import com.example.todo_list.view.theme.White
 import com.example.todo_list.view.theme.Yellow100
 import com.example.todo_list.view.theme.YellowFocused
 
+
+object OnBackClickEvent {
+    private val isEvent: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    fun call() {
+        isEvent.value = true
+    }
+
+    fun observer(owner: LifecycleOwner, onClickAction: () -> Unit) {
+        val observer = Observer<Boolean> {
+            Log.d("Status: ", it.toString())
+
+            if (isEvent.hasActiveObservers() && it) {
+                onClickAction()
+                isEvent.value = false
+            }
+        }
+        isEvent.observe(owner, observer)
+    }
+}
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewTaskScreen(
@@ -49,8 +76,6 @@ fun NewTaskScreen(
     onClickBack: () -> Unit
 ) {
     BackHandler {
-        // Fix back event
-        onClickBack()
         viewModel.handleUiEvent(
             NewTaskUiEvent.OnBackClick
         )
@@ -62,9 +87,10 @@ fun NewTaskScreen(
         )
     }
 
-//    onBackClickEvent.obsereve {
-//        onClickBack()
-//    }
+    OnBackClickEvent.observer(LocalLifecycleOwner.current) {
+        onClickBack()
+    }
+
 
     val uiState by viewModel.uiState
     val uiEvent = viewModel::handleUiEvent

@@ -9,8 +9,9 @@ import com.example.todo_list.domain.repository.TaskRepository
 import com.example.todo_list.view.model.TaskUi
 import javax.inject.Inject
 
-class TaskRepositoryImpl
-@Inject constructor(private val localDataSource: LocalDataSource) : TaskRepository {
+class TaskRepositoryImpl @Inject constructor(
+    private val localDataSource: LocalDataSource
+) : TaskRepository {
 
     override suspend fun getAllTasks(): List<TaskUi> {
         return localDataSource.getAllTasks().map {
