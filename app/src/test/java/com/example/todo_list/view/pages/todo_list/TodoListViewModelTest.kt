@@ -4,7 +4,6 @@ import com.example.todo_list.domain.datasource.LocalDataSource
 import com.example.todo_list.domain.repository.TaskRepository
 import com.example.todo_list.view.model.TaskUi
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +37,7 @@ class TodoListViewModelTest {
     }
 
     @Test
-    fun `load data`() = runTest {
+    fun `is load successfully all tasks from database`() = runTest {
         // GIVEN
         coEvery { taskRepository.getAllTasks() } returns tasks
         // WHEN
