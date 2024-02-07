@@ -45,9 +45,12 @@ import com.example.todo_list.view.theme.YellowFocused
 @Composable
 fun NewTaskScreen(
     viewModel: NewTaskViewModel,
+    taskId: Int,
     onClickBack: () -> Unit
 ) {
     BackHandler {
+        // Fix back event
+        onClickBack()
         viewModel.handleUiEvent(
             NewTaskUiEvent.OnBackClick
         )
@@ -55,7 +58,7 @@ fun NewTaskScreen(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.handleUiEvent(
-            NewTaskUiEvent.OnLoadingUiData
+            NewTaskUiEvent.OnLoadingUiData(taskId)
         )
     }
 
@@ -73,9 +76,9 @@ fun NewTaskScreen(
                 NewTaskScreenContent(
                     uiState = state,
                     modifier = Modifier.padding(it),
-                    onChangeDate = { date -> state.newTask.date = date },
-                    onChangeDescription = { desc -> state.newTask.description = desc },
-                    onChangeTime = { time -> state.newTask.time = time }
+                    onChangeDate = { date -> state.task.date = date },
+                    onChangeDescription = { desc -> state.task.description = desc },
+                    onChangeTime = { time -> state.task.time = time }
                 )
             },
             topBar = {
@@ -108,8 +111,8 @@ private fun NewTaskScreenContent(
     onChangeDescription: (description: String) -> Unit
 ) {
     Column(modifier = modifier) {
-        val time = rememberSaveable { mutableStateOf(uiState.newTask.time) }
-        val date = rememberSaveable { mutableStateOf(uiState.newTask.date) }
+        val time = rememberSaveable { mutableStateOf(uiState.task.time) }
+        val date = rememberSaveable { mutableStateOf(uiState.task.date) }
 
         val isShowDialogSelectTime = remember { mutableStateOf(false) }
         val isShowDialogSelectDate = remember { mutableStateOf(false) }
@@ -164,7 +167,7 @@ private fun NewTaskScreenContent(
         }
 
         TaskDescription(
-            uiState.newTask.description,
+            uiState.task.description,
             onTaskDescriptionChange = { onChangeDescription(it) }
         )
     }

@@ -7,7 +7,9 @@ import com.example.todo_list.domain.datasource.LocalDataSource
 import com.example.todo_list.domain.model.TaskDomain
 import javax.inject.Inject
 
-class LocalDataSourceImpl @Inject constructor(private val database: AppDatabase) : LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(
+    private val database: AppDatabase
+) : LocalDataSource {
 
     override suspend fun getAllTasks(): List<TaskDomain> {
         return database.taskDao().getAllTasks().map {
@@ -40,6 +42,4 @@ class LocalDataSourceImpl @Inject constructor(private val database: AppDatabase)
             it.toDomain()
         }
     }
-
-
 }
