@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -49,8 +50,6 @@ fun NewTaskScreen(
     onClickBack: () -> Unit
 ) {
     BackHandler {
-        // Fix back event
-        onClickBack()
         viewModel.handleUiEvent(
             NewTaskUiEvent.OnBackClick
         )
@@ -62,9 +61,9 @@ fun NewTaskScreen(
         )
     }
 
-//    onBackClickEvent.obsereve {
-//        onClickBack()
-//    }
+    viewModel.onBackClickEvent.observer(LocalLifecycleOwner.current) {
+        onClickBack()
+    }
 
     val uiState by viewModel.uiState
     val uiEvent = viewModel::handleUiEvent
