@@ -12,5 +12,6 @@
     <string name="delete_icon_button">Delete icon button</string>
     <string name="edit_icon_button">Edit icon button</string>
     <string name="delete_dialog_text">Are you sure want to delete this task?</string>
+    <string name="saved">Saved</string>
 
 </resources>
