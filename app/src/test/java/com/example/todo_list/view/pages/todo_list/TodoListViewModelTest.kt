@@ -67,5 +67,32 @@ class TodoListViewModelTest {
     }
 
 
+    @Test
+    fun `on change status task successfully`() = runTest {
+        // GIVEN
+        val myTask = TaskUi(
+            1, "description",
+            "156146146", "156146146", false
+        )
+
+        //coEvery { taskRepository.changeTaskStatus(any(), any()) } returns Unit
+
+        // WHEN
+        viewModel.handleUiEvent(TodoListUiEvent.OnCheckClick(1, true))
+
+        val task = viewModel.uiState.value?.tasks?.first { it.taskId == 1 }
+
+
+
+        if (task != null) {
+            Assert.assertTrue(false)
+        }
+
+        coVerify(exactly = 1) {
+            taskRepository.changeTaskStatus(any(), any())
+        }
+    }
+
+
 }
 
