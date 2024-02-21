@@ -5,6 +5,7 @@ import com.example.todo_list.base.BaseViewModel
 import com.example.todo_list.base.Event
 import com.example.todo_list.base.UiEvent
 import com.example.todo_list.domain.repository.TaskRepository
+import com.example.todo_list.view.model.TaskUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,23 @@ class TodoListViewModel @Inject constructor(
     override fun handleUiEvent(uiEvent: UiEvent) {
         when (uiEvent) {
             is TodoListUiEvent.OnCheckClick -> {
-                onCheckClick(uiEvent.id, uiEvent.currentState)
+                uiEvent.task
+
+                updateState { state ->
+                    val newTasks = state.value?.tasks?.map { taskUI ->
+                        if (taskUI.taskId == uiEvent.task.taskId) {
+                            taskUI.copy(isDone = !uiEvent.task.isDone)
+                        } else {
+                            taskUI
+                        }
+                    }
+
+                    state.value = state.value?.copy(
+                        tasks = newTasks.orEmpty()
+                    )
+                }
+
+                onCheckClick(uiEvent.task.taskId, !uiEvent.task.isDone)
             }
 
             is TodoListUiEvent.OnEditClick -> {

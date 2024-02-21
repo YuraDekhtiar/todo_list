@@ -159,8 +159,8 @@ private fun TodoListItem(
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
-                checkedState.value = !checkedState.value
-                uiEvent(TodoListUiEvent.OnCheckClick(task.taskId, checkedState.value))
+                //checkedState.value = !checkedState.value
+                uiEvent(TodoListUiEvent.OnCheckClick(task))
             }
     ) {
         Column(
@@ -169,7 +169,7 @@ private fun TodoListItem(
             verticalArrangement = Arrangement.Center
         ) {
             Checkbox(
-                checked = checkedState.value,
+                checked = task.isDone,
                 onCheckedChange = { checkedState.value = it },
                 colors = CheckboxDefaults.colors(
                     uncheckedColor = Yellow100,
