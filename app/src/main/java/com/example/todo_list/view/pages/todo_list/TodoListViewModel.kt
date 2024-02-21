@@ -2,8 +2,10 @@ package com.example.todo_list.view.pages.todo_list
 
 import androidx.lifecycle.viewModelScope
 import com.example.todo_list.base.BaseViewModel
+import com.example.todo_list.base.Event
 import com.example.todo_list.base.UiEvent
 import com.example.todo_list.domain.repository.TaskRepository
+import com.example.todo_list.view.model.TaskUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,61 +14,98 @@ import javax.inject.Inject
 class TodoListViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : BaseViewModel<TodoListUiState>() {
+    val onEditClickEvent = Event<Int>()
+    val onAddClickEvent = Event<Unit>()
+
 
     override fun handleUiEvent(uiEvent: UiEvent) {
         when (uiEvent) {
             is TodoListUiEvent.OnCheckClick -> {
-                viewModelScope.launch {
-                    taskRepository.changeTaskStatus(uiEvent.id, uiEvent.currentState)
-                }
-            }
+                uiEvent.task
 
-            is TodoListUiEvent.OnEditClick -> {}
-            is TodoListUiEvent.OnDeleteClick -> {
-                viewModelScope.launch {
-                    taskRepository.deleteTask(uiEvent.id)
-
-                    updateState {
-                        it.value = it.value?.copy(
-                            tasks = it.value!!.tasks.filter { task -> task.taskId != uiEvent.id }
-                        )
+                updateState { state ->
+                    val newTasks = state.value?.tasks?.map { taskUI ->
+                        if (taskUI.taskId == uiEvent.task.taskId) {
+                            taskUI.copy(isDone = !uiEvent.task.isDone)
+                        } else {
+                            taskUI
+                        }
                     }
+
+                    state.value = state.value?.copy(
+                        tasks = newTasks.orEmpty()
+                    )
                 }
+
+                onCheckClick(uiEvent.task.taskId, !uiEvent.task.isDone)
             }
 
-            is TodoListUiEvent.OnTaskClick -> {
-
+            is TodoListUiEvent.OnEditClick -> {
+                onEditClickEvent.call(uiEvent.id)
             }
 
+            is TodoListUiEvent.OnDeleteClick -> {
+                onDeleteClick(uiEvent.id)
+            }
+
+            is TodoListUiEvent.OnTaskClick -> {}
             is TodoListUiEvent.OnAddClick -> {
-
+                onAddClickEvent.call(Unit)
             }
 
             is TodoListUiEvent.OnSearchUpdate -> {
-                viewModelScope.launch {
-                    val tasks = taskRepository.searchTask(uiEvent.text)
-
-                    updateState {
-                        it.value = it.value?.copy(tasks = tasks)
-                    }
-                }
+                onSearchUpdate(uiEvent.text)
             }
 
             is TodoListUiEvent.OnSearchClear -> {
-                viewModelScope.launch {
-                    val tasks = taskRepository.getAllTasks()
-
-                    updateState {
-                        it.value = TodoListUiState(tasks)
-                    }
-                }
+                onSearchClear()
             }
 
-            is TodoListUiEvent.OnLoadingUiData -> { loadData() }
+            is TodoListUiEvent.OnLoadingUiData -> {
+                onLoadData()
+            }
         }
     }
 
-    private fun loadData() {
+    private fun onSearchClear() {
+        viewModelScope.launch {
+            val tasks = taskRepository.getAllTasks()
+
+            updateState {
+                it.value = TodoListUiState(tasks)
+            }
+        }
+    }
+
+    private fun onSearchUpdate(text: String) {
+        viewModelScope.launch {
+            val tasks = taskRepository.searchTask(text)
+
+            updateState {
+                it.value = it.value?.copy(tasks = tasks)
+            }
+        }
+    }
+
+    private fun onDeleteClick(id: Int) {
+        viewModelScope.launch {
+            taskRepository.deleteTask(id)
+
+            updateState {
+                it.value = it.value?.copy(
+                    tasks = it.value!!.tasks.filter { task -> task.taskId != id }
+                )
+            }
+        }
+    }
+
+    private fun onCheckClick(id: Int, state: Boolean) {
+        viewModelScope.launch {
+            taskRepository.changeTaskStatus(id, state)
+        }
+    }
+
+    private fun onLoadData() {
         viewModelScope.launch {
             val tasks = taskRepository.getAllTasks()
 

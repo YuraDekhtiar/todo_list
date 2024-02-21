@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,14 @@ fun TodoListScreen(
         )
     }
 
+    viewModel.onEditClickEvent.observer(LocalLifecycleOwner.current) {
+        onClickEditTask(it)
+    }
+
+    viewModel.onAddClickEvent.observer(LocalLifecycleOwner.current) {
+        onClickNewTask()
+    }
+
     val uiState by viewModel.uiState
     val uiEvent = viewModel::handleUiEvent
 
@@ -73,18 +82,17 @@ fun TodoListScreen(
             TodoListScreenContent(
                 modifier = Modifier.padding(innerPadding),
                 uiState = uiState,
-                uiEvent = uiEvent,
-                onClickEditTask = onClickEditTask
+                uiEvent = uiEvent
             )
         },
         bottomBar = {
-            BottomBar(onClickNewTask = onClickNewTask)
+            BottomBar(uiEvent = uiEvent)
         }
     )
 }
 
 @Composable
-private fun BottomBar(onClickNewTask: () -> Unit) {
+private fun BottomBar(uiEvent: (TodoListUiEvent) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -92,7 +100,9 @@ private fun BottomBar(onClickNewTask: () -> Unit) {
     ) {
         FloatingActionButton(
             shape = CircleShape,
-            onClick = { onClickNewTask() },
+            onClick = {
+                uiEvent(TodoListUiEvent.OnAddClick)
+            },
             contentColor = White,
             containerColor = Yellow100,
         ) {
@@ -105,7 +115,6 @@ private fun BottomBar(onClickNewTask: () -> Unit) {
 @Composable
 private fun TodoListScreenContent(
     modifier: Modifier = Modifier,
-    onClickEditTask: (id: Int) -> Unit,
     uiState: TodoListUiState?,
     uiEvent: (TodoListUiEvent) -> Unit
 ) {
@@ -124,8 +133,7 @@ private fun TodoListScreenContent(
                 items(it.tasks.size) { index ->
                     TodoListItem(
                         task = it.tasks[index],
-                        uiEvent = uiEvent,
-                        onClickEditTask = onClickEditTask
+                        uiEvent = uiEvent
                     )
                 }
             }
@@ -136,7 +144,6 @@ private fun TodoListScreenContent(
 @Composable
 private fun TodoListItem(
     task: TaskUi,
-    onClickEditTask: (id: Int) -> Unit,
     uiEvent: (TodoListUiEvent) -> Unit,
 ) {
     val checkedState = remember { mutableStateOf(task.isDone) }
@@ -152,8 +159,8 @@ private fun TodoListItem(
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
-                checkedState.value = !checkedState.value
-                uiEvent(TodoListUiEvent.OnCheckClick(task.taskId, checkedState.value))
+                //checkedState.value = !checkedState.value
+                uiEvent(TodoListUiEvent.OnCheckClick(task))
             }
     ) {
         Column(
@@ -162,7 +169,7 @@ private fun TodoListItem(
             verticalArrangement = Arrangement.Center
         ) {
             Checkbox(
-                checked = checkedState.value,
+                checked = task.isDone,
                 onCheckedChange = { checkedState.value = it },
                 colors = CheckboxDefaults.colors(
                     uncheckedColor = Yellow100,
@@ -202,7 +209,7 @@ private fun TodoListItem(
                 horizontalAlignment = Alignment.End
             ) {
                 EditIconButton {
-                    onClickEditTask(task.taskId)
+                    uiEvent(TodoListUiEvent.OnEditClick(task.taskId))
                 }
                 DeleteIconButton {
                     isShowDeleteConfirmDialog.value = true
