@@ -19,6 +19,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults.elevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -97,12 +98,15 @@ fun TodoListScreen(
 @Composable
 private fun BottomBar(uiEvent: (TodoListUiEvent) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(3.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
         FloatingActionButton(
             shape = CircleShape,
+            elevation = elevation(0.dp, 2.dp),
             onClick = {
                 uiEvent(TodoListUiEvent.OnAddClick)
             },
