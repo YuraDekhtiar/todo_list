@@ -13,5 +13,6 @@
     <string name="edit_icon_button">Edit icon button</string>
     <string name="delete_dialog_text">Are you sure want to delete this task?</string>
     <string name="saved">Saved</string>
+    <string name="date_format">dd/MM/yyyy</string>
 
 </resources>

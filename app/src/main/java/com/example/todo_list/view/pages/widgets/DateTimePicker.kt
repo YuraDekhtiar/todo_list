@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,11 +47,13 @@ fun CalendarPickerDialog(
             }
         },
         confirmButton = {
+            val dateFormat = stringResource(id = R.string.date_format)
+
             TextButton(
                 onClick = {
                     datePickerState.selectedDateMillis?.let {
                         onClickOk(
-                            SimpleDateFormat("dd/MM/yyyy").format(Date(it))
+                            SimpleDateFormat(dateFormat, Locale.getDefault()).format(Date(it))
                         )
                     }
                 },
