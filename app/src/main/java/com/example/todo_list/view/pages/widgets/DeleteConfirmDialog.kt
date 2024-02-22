@@ -3,12 +3,13 @@ package com.example.todo_list.view.pages.widgets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.todo_list.R
 
 @Composable
@@ -25,10 +26,17 @@ fun DeleteConfirmDialog(
             )
         },
         title = {
-            Text(text = dialogTitle)
+            Text(
+                text = dialogTitle,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
         },
         text = {
-            Text(text = stringResource(id = R.string.delete_dialog_text))
+            Text(
+                text = stringResource(id = R.string.delete_dialog_text),
+                textAlign = TextAlign.Justify
+            )
         },
         onDismissRequest = {
             onDismissRequest()

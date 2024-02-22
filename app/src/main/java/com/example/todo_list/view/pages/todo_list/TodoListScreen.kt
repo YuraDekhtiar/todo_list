@@ -40,6 +40,7 @@ import com.example.todo_list.view.model.TaskUi
 import com.example.todo_list.view.pages.todo_list.widgets.SearchTextField
 import com.example.todo_list.view.pages.widgets.DeleteConfirmDialog
 import com.example.todo_list.view.pages.widgets.DeleteIconButton
+import com.example.todo_list.view.pages.widgets.DetailTaskDialog
 import com.example.todo_list.view.pages.widgets.EditIconButton
 import com.example.todo_list.view.theme.Black44
 import com.example.todo_list.view.theme.Gray100
@@ -151,6 +152,7 @@ private fun TodoListItem(
     uiEvent: (TodoListUiEvent) -> Unit,
 ) {
     val isShowDeleteConfirmDialog = remember { mutableStateOf(false) }
+    val isShowDetailDialog = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -162,8 +164,8 @@ private fun TodoListItem(
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
-                //checkedState.value = !checkedState.value
-            },
+                isShowDetailDialog.value = true
+            }
     ) {
         // Checkbox
         Column(
@@ -229,7 +231,15 @@ private fun TodoListItem(
                     dialogTitle = task.description,
                 )
             }
+
+            if (isShowDetailDialog.value) {
+                DetailTaskDialog(
+                    task = task,
+                    onDismissRequest = { isShowDetailDialog.value = false }
+                )
+            }
         }
+
     }
 }
 
