@@ -65,8 +65,8 @@ fun CalendarPickerDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimePickerDialog1(
-    onClickOk: (selectedHour: Int, selectedMinute: Int) -> Unit,
+fun TimePickerDialog(
+    onClickOk: (selectedHour: String, selectedMinute: String) -> Unit,
     onClickCancel: () -> Unit
 ) {
     val timePickerState = rememberTimePickerState(
@@ -110,8 +110,8 @@ fun TimePickerDialog1(
                 TextButton(
                     onClick = {
                         onClickOk(
-                            timePickerState.hour,
-                            timePickerState.minute
+                            String.format("%02d", timePickerState.hour),
+                            String.format("%02d", timePickerState.minute)
                         )
                     }
                 ) {
