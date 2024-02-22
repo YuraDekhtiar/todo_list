@@ -1,7 +1,7 @@
 package com.example.todo_list.view.pages.new_task
 
 import CalendarPickerDialog
-import TimePickerDialog1
+import TimePickerDialog
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
@@ -153,7 +153,7 @@ private fun NewTaskScreenContent(
         }
 
         if (isShowDialogSelectTime.value) {
-            TimePickerDialog1(
+            TimePickerDialog(
                 onClickOk = { selectedHour, selectedMinute ->
                     time.value = "${selectedHour}:$selectedMinute"
                     isShowDialogSelectTime.value = false

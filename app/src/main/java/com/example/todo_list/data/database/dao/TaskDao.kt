@@ -11,10 +11,10 @@ import com.example.todo_list.data.database.entities.Task
 @Dao
 interface TaskDao {
 
-    @Query("SELECT * FROM tasks")
+    @Query("SELECT * FROM tasks ORDER BY time")
     suspend fun getAllTasks() : List<Task>
 
-    @Query("SELECT * FROM tasks WHERE description LIKE (:search)")
+    @Query("SELECT * FROM tasks WHERE description LIKE '%' || :search || '%'")
     suspend fun searchTask(search: String) : List<Task>
 
     @Query("SELECT * FROM tasks WHERE task_id IN (:id)")

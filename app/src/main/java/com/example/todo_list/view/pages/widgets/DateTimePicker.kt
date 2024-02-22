@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.todo_list.R
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,11 +47,13 @@ fun CalendarPickerDialog(
             }
         },
         confirmButton = {
+            val dateFormat = stringResource(id = R.string.date_format)
+
             TextButton(
                 onClick = {
                     datePickerState.selectedDateMillis?.let {
                         onClickOk(
-                            SimpleDateFormat("dd/MM/yyyy").format(Date(it))
+                            SimpleDateFormat(dateFormat, Locale.getDefault()).format(Date(it))
                         )
                     }
                 },
@@ -65,8 +68,8 @@ fun CalendarPickerDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimePickerDialog1(
-    onClickOk: (selectedHour: Int, selectedMinute: Int) -> Unit,
+fun TimePickerDialog(
+    onClickOk: (selectedHour: String, selectedMinute: String) -> Unit,
     onClickCancel: () -> Unit
 ) {
     val timePickerState = rememberTimePickerState(
@@ -110,8 +113,8 @@ fun TimePickerDialog1(
                 TextButton(
                     onClick = {
                         onClickOk(
-                            timePickerState.hour,
-                            timePickerState.minute
+                            String.format("%02d", timePickerState.hour),
+                            String.format("%02d", timePickerState.minute)
                         )
                     }
                 ) {

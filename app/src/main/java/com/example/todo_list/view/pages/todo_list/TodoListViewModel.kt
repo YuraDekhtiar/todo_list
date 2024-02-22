@@ -21,23 +21,7 @@ class TodoListViewModel @Inject constructor(
     override fun handleUiEvent(uiEvent: UiEvent) {
         when (uiEvent) {
             is TodoListUiEvent.OnCheckClick -> {
-                uiEvent.task
-
-                updateState { state ->
-                    val newTasks = state.value?.tasks?.map { taskUI ->
-                        if (taskUI.taskId == uiEvent.task.taskId) {
-                            taskUI.copy(isDone = !uiEvent.task.isDone)
-                        } else {
-                            taskUI
-                        }
-                    }
-
-                    state.value = state.value?.copy(
-                        tasks = newTasks.orEmpty()
-                    )
-                }
-
-                onCheckClick(uiEvent.task.taskId, !uiEvent.task.isDone)
+                onCheckClick(uiEvent.task)
             }
 
             is TodoListUiEvent.OnEditClick -> {
@@ -68,21 +52,19 @@ class TodoListViewModel @Inject constructor(
     }
 
     private fun onSearchClear() {
-        viewModelScope.launch {
-            val tasks = taskRepository.getAllTasks()
-
-            updateState {
-                it.value = TodoListUiState(tasks)
-            }
-        }
+        loadAllTasks()
     }
 
     private fun onSearchUpdate(text: String) {
-        viewModelScope.launch {
-            val tasks = taskRepository.searchTask(text)
+        if(text.isEmpty()) {
+            loadAllTasks()
+        } else {
+            viewModelScope.launch {
+                val tasks = taskRepository.searchTask(text)
 
-            updateState {
-                it.value = it.value?.copy(tasks = tasks)
+                updateState {
+                    it.value = it.value?.copy(tasks = tasks)
+                }
             }
         }
     }
@@ -99,13 +81,31 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
-    private fun onCheckClick(id: Int, state: Boolean) {
+    private fun onCheckClick(task: TaskUi) {
+        updateState { state ->
+            val newTasks = state.value?.tasks?.map { taskUI ->
+                if (taskUI.taskId == task.taskId) {
+                    taskUI.copy(isDone = !task.isDone)
+                } else {
+                    taskUI
+                }
+            }
+
+            state.value = state.value?.copy(
+                tasks = newTasks.orEmpty()
+            )
+        }
+
         viewModelScope.launch {
-            taskRepository.changeTaskStatus(id, state)
+            taskRepository.changeTaskStatus(task.taskId, task.isDone)
         }
     }
 
     private fun onLoadData() {
+        loadAllTasks()
+    }
+
+    private fun loadAllTasks() {
         viewModelScope.launch {
             val tasks = taskRepository.getAllTasks()
 
