@@ -56,7 +56,7 @@ class TodoListViewModel @Inject constructor(
     }
 
     private fun onSearchUpdate(text: String) {
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             loadAllTasks()
         } else {
             viewModelScope.launch {
@@ -71,32 +71,31 @@ class TodoListViewModel @Inject constructor(
 
     private fun onDeleteClick(id: Int) {
         viewModelScope.launch {
-            taskRepository.deleteTask(id)
-
             updateState {
                 it.value = it.value?.copy(
                     tasks = it.value!!.tasks.filter { task -> task.taskId != id }
                 )
             }
+            taskRepository.deleteTask(id)
         }
     }
 
     private fun onCheckClick(task: TaskUi) {
-        updateState { state ->
-            val newTasks = state.value?.tasks?.map { taskUI ->
-                if (taskUI.taskId == task.taskId) {
-                    taskUI.copy(isDone = !task.isDone)
-                } else {
-                    taskUI
+        viewModelScope.launch {
+            updateState { state ->
+                val newTasks = state.value?.tasks?.map { taskUI ->
+                    if (taskUI.taskId == task.taskId) {
+                        taskUI.copy(isDone = !task.isDone)
+                    } else {
+                        taskUI
+                    }
                 }
+
+                state.value = state.value?.copy(
+                    tasks = newTasks.orEmpty()
+                )
             }
 
-            state.value = state.value?.copy(
-                tasks = newTasks.orEmpty()
-            )
-        }
-
-        viewModelScope.launch {
             taskRepository.changeTaskStatus(task.taskId, task.isDone)
         }
     }
